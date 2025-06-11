@@ -337,6 +337,7 @@ const closeCommandLine = () => {
       :line="parseInt(cursorPosition)"
       :column="1"
       :total-lines="totalLines"
+      @openSettings="showSettingsModal = true"
     />
 
     <!-- Command Line -->

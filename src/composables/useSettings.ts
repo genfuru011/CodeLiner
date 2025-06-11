@@ -25,7 +25,7 @@ const DEFAULT_SETTINGS: Settings = {
   showStatusBar: true,
   autoSave: false,
   tabSize: 2,
-  backgroundOpacity: 0.95
+  backgroundOpacity: 0.75
 }
 
 const STORAGE_KEY = 'codeliner-settings'

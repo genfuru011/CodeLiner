@@ -104,23 +104,29 @@
               </select>
             </div>
 
-            <!-- Background Opacity -->
+            <!-- Transparency Toggle -->
             <div class="flex items-center justify-between">
               <div class="flex-1">
-                <label class="text-dark-text text-sm font-medium">Background Opacity</label>
-                <p class="text-dark-text-muted text-xs">Transparency level ({{ Math.round(backgroundOpacity * 100) }}%)</p>
+                <label class="text-dark-text text-sm font-medium">Background Transparency</label>
+                <p class="text-dark-text-muted text-xs">Toggle between 75% and 100% opacity ({{ Math.round(backgroundOpacity * 100) }}%)</p>
               </div>
-              <div class="flex items-center gap-2">
-                <input
-                  type="range"
-                  v-model.number="backgroundOpacity"
-                  min="0.5"
-                  max="1"
-                  step="0.05"
-                  class="w-20 h-1 bg-dark-border rounded-lg appearance-none cursor-pointer slider"
+              <button
+                @click="toggleTransparency"
+                :class="[
+                  'relative inline-flex h-5 w-9 items-center rounded-full transition-colors border',
+                  isTransparent 
+                    ? 'bg-accent border-accent' 
+                    : 'bg-dark-bg border-dark-border'
+                ]"
+              >
+                <span
+                  :class="[
+                    'inline-block h-3 w-3 transform rounded-full transition-transform',
+                    isTransparent ? 'translate-x-5' : 'translate-x-1'
+                  ]"
+                  style="background: var(--nvim-fg);"
                 />
-                <span class="text-xs text-dark-text-muted w-8 text-right">{{ Math.round(backgroundOpacity * 100) }}%</span>
-              </div>
+              </button>
             </div>
           </div>
         </section>
@@ -146,6 +152,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useSettings } from '../composables/useSettings'
 
 interface Props {
@@ -166,6 +173,13 @@ const {
   resetSettings
 } = useSettings()
 
+// 透明度トグル用の定数
+const TRANSPARENT_OPACITY = 0.75
+const OPAQUE_OPACITY = 1.0
+
+// 透明度状態を計算
+const isTransparent = computed(() => backgroundOpacity.value === TRANSPARENT_OPACITY)
+
 // トグル関数を定義
 const toggleStatusBar = () => {
   showStatusBar.value = !showStatusBar.value
@@ -174,45 +188,13 @@ const toggleStatusBar = () => {
 const toggleAutoSave = () => {
   autoSave.value = !autoSave.value
 }
+
+const toggleTransparency = () => {
+  backgroundOpacity.value = isTransparent.value ? OPAQUE_OPACITY : TRANSPARENT_OPACITY
+}
 </script>
 
 <style scoped>
-/* Slider styling for background opacity */
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: var(--nvim-blue);
-  cursor: pointer;
-  border: 2px solid var(--nvim-bg);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.slider::-webkit-slider-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  background: var(--nvim-border);
-  border-radius: 2px;
-}
-
-.slider::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: var(--nvim-blue);
-  cursor: pointer;
-  border: 2px solid var(--nvim-bg);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.slider::-moz-range-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  background: var(--nvim-border);
-  border-radius: 2px;
-}
+/* Settings modal styles are handled by Tailwind classes */
 </style>
 
