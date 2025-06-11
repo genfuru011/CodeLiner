@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as monaco from 'monaco-editor'
+import { useSettings } from '../composables/useSettings'
 
 interface Props {
   modelValue: string
@@ -16,6 +17,7 @@ interface Emits {
   (e: 'update:modelValue', value: string): void
   (e: 'save'): void
   (e: 'run'): void
+  (e: 'cursorChange', line: number, column: number): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,6 +26,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+
+const { fontSize, fontFamily, tabSize } = useSettings()
 
 const editorContainer = ref<HTMLElement>()
 let editor: monaco.editor.IStandaloneCodeEditor | null = null
@@ -61,8 +65,8 @@ onMounted(() => {
         theme: 'codeliner-dark',
         automaticLayout: true,
         minimap: { enabled: false },
-        fontSize: 14,
-        fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace',
+        fontSize: fontSize.value,
+        fontFamily: fontFamily.value,
         lineNumbers: 'on',
         roundedSelection: false,
         scrollBeyondLastLine: false,
@@ -81,12 +85,31 @@ onMounted(() => {
       })
 
       // Set tab size
-      editor.getModel()?.updateOptions({ tabSize: 2, insertSpaces: true })
+      editor.getModel()?.updateOptions({ tabSize: tabSize.value, insertSpaces: true })
 
       // Listen for content changes
       editor.onDidChangeModelContent(() => {
         if (editor) {
           emit('update:modelValue', editor.getValue())
+        }
+      })
+      
+      // Listen for cursor position changes
+      editor.onDidChangeCursorPosition((e) => {
+        emit('cursorChange', e.position.lineNumber, e.position.column)
+      })
+      
+      // Watch for settings changes
+      watch([fontSize, fontFamily, tabSize], () => {
+        if (editor) {
+          editor.updateOptions({
+            fontSize: fontSize.value,
+            fontFamily: fontFamily.value
+          })
+          editor.getModel()?.updateOptions({ 
+            tabSize: tabSize.value, 
+            insertSpaces: true 
+          })
         }
       })
     } catch (error) {
