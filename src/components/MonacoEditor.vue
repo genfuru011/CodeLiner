@@ -1,0 +1,121 @@
+<template>
+  <div ref="editorContainer" class="w-full h-full"></div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import * as monaco from 'monaco-editor'
+
+interface Props {
+  modelValue: string
+  language?: string
+  theme?: string
+}
+
+interface Emits {
+  (e: 'update:modelValue', value: string): void
+  (e: 'save'): void
+  (e: 'run'): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  language: 'javascript',
+  theme: 'vs-dark'
+})
+
+const emit = defineEmits<Emits>()
+
+const editorContainer = ref<HTMLElement>()
+let editor: monaco.editor.IStandaloneCodeEditor | null = null
+
+onMounted(() => {
+  if (editorContainer.value) {
+    try {
+      // Configure Monaco Editor theme
+      monaco.editor.defineTheme('codeliner-dark', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+          { token: 'comment', foreground: 'a8abb2', fontStyle: 'italic' },
+          { token: 'keyword', foreground: '4285f4' },
+          { token: 'string', foreground: '81c784' },
+          { token: 'number', foreground: 'ffb74d' },
+          { token: 'function', foreground: '64b5f6' },
+        ],
+        colors: {
+          'editor.background': '#1a1b23',
+          'editor.foreground': '#e4e6ea',
+          'editor.lineHighlightBackground': '#2a2b35',
+          'editor.selectionBackground': '#343644',
+          'editorCursor.foreground': '#4285f4',
+          'editorLineNumber.foreground': '#a8abb2',
+          'editorLineNumber.activeForeground': '#e4e6ea',
+          'editor.selectionHighlightBackground': '#343644',
+          'editor.wordHighlightBackground': '#343644',
+        }
+      })
+
+      editor = monaco.editor.create(editorContainer.value, {
+        value: props.modelValue,
+        language: props.language,
+        theme: 'codeliner-dark',
+        automaticLayout: true,
+        minimap: { enabled: false },
+        fontSize: 14,
+        fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace',
+        lineNumbers: 'on',
+        roundedSelection: false,
+        scrollBeyondLastLine: false,
+        readOnly: false,
+        cursorStyle: 'line',
+        wordWrap: 'on'
+      })
+
+      // Add keyboard shortcuts
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+        emit('save')
+      })
+
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+        emit('run')
+      })
+
+      // Set tab size
+      editor.getModel()?.updateOptions({ tabSize: 2, insertSpaces: true })
+
+      // Listen for content changes
+      editor.onDidChangeModelContent(() => {
+        if (editor) {
+          emit('update:modelValue', editor.getValue())
+        }
+      })
+    } catch (error) {
+      console.error('Failed to initialize Monaco Editor:', error)
+    }
+  }
+})
+
+// Watch for external changes to the model value
+watch(() => props.modelValue, (newValue) => {
+  if (editor && editor.getValue() !== newValue) {
+    editor.setValue(newValue)
+  }
+})
+
+// Watch for language changes
+watch(() => props.language, (newLanguage) => {
+  if (editor) {
+    const model = editor.getModel()
+    if (model) {
+      monaco.editor.setModelLanguage(model, newLanguage)
+    }
+  }
+})
+
+onUnmounted(() => {
+  if (editor) {
+    editor.dispose()
+    editor = null
+  }
+})
+</script>
