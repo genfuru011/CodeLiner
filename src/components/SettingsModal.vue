@@ -103,6 +103,31 @@
                 <option value="18">18px</option>
               </select>
             </div>
+
+            <!-- Transparency Toggle -->
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <label class="text-dark-text text-sm font-medium">Background Transparency</label>
+                <p class="text-dark-text-muted text-xs">Toggle between 75% and 100% opacity ({{ Math.round(backgroundOpacity * 100) }}%)</p>
+              </div>
+              <button
+                @click="toggleTransparency"
+                aria-label="Toggle background transparency"
+                :class="[
+                  'relative inline-flex h-5 w-9 items-center rounded-full transition-colors border',
+                  isTransparent 
+                    ? 'bg-accent border-accent' 
+                    : 'bg-dark-bg border-dark-border'
+                ]"
+                <span
+                  :class="[
+                    'inline-block h-3 w-3 transform rounded-full transition-transform',
+                    isTransparent ? 'translate-x-5' : 'translate-x-1'
+                  ]"
+                  style="background: var(--nvim-fg);"
+                />
+              </button>
+            </div>
           </div>
         </section>
       </div>
@@ -127,6 +152,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useSettings } from '../composables/useSettings'
 
 interface Props {
@@ -143,8 +169,16 @@ const {
   autoSave,
   theme,
   fontSize,
+  backgroundOpacity,
   resetSettings
 } = useSettings()
+
+// 透明度トグル用の定数
+const TRANSPARENT_OPACITY = 0.75
+const OPAQUE_OPACITY = 1.0
+
+// 透明度状態を計算
+const isTransparent = computed(() => backgroundOpacity.value === TRANSPARENT_OPACITY)
 
 // トグル関数を定義
 const toggleStatusBar = () => {
@@ -154,5 +188,13 @@ const toggleStatusBar = () => {
 const toggleAutoSave = () => {
   autoSave.value = !autoSave.value
 }
+
+const toggleTransparency = () => {
+  backgroundOpacity.value = isTransparent.value ? OPAQUE_OPACITY : TRANSPARENT_OPACITY
+}
 </script>
+
+<style scoped>
+/* Settings modal styles are handled by Tailwind classes */
+</style>
 

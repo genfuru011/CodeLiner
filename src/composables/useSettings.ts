@@ -11,6 +11,7 @@ export interface Settings {
   showStatusBar: boolean
   autoSave: boolean
   tabSize: number
+  backgroundOpacity: number
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -23,7 +24,8 @@ const DEFAULT_SETTINGS: Settings = {
   fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace',
   showStatusBar: true,
   autoSave: false,
-  tabSize: 2
+  tabSize: 2,
+  backgroundOpacity: 0.75
 }
 
 const STORAGE_KEY = 'codeliner-settings'
@@ -131,6 +133,13 @@ export function useSettings() {
     }
   })
 
+  const backgroundOpacity = computed({
+    get: () => settings.value.backgroundOpacity,
+    set: (value: number) => {
+      settings.value.backgroundOpacity = Math.max(0.5, Math.min(1, value))
+    }
+  })
+
   // Reset to defaults
   const resetSettings = () => {
     settings.value = { ...DEFAULT_SETTINGS }
@@ -165,6 +174,7 @@ export function useSettings() {
     showStatusBar,
     autoSave,
     tabSize,
+    backgroundOpacity,
     resetSettings,
     exportSettings,
     importSettings

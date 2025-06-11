@@ -41,6 +41,15 @@
       <div class="progress">
         {{ progressPercent }}%
       </div>
+      
+      <!-- Settings button -->
+      <button 
+        class="settings-btn"
+        @click="$emit('openSettings')"
+        title="Settings"
+      >
+        ⚙
+      </button>
     </div>
   </div>
 </template>
@@ -70,6 +79,10 @@ const props = withDefaults(defineProps<Props>(), {
   totalLines: 1
 })
 
+defineEmits<{
+  openSettings: []
+}>()
+
 const modeDisplay = computed(() => {
   const modes = {
     normal: 'NORMAL',
@@ -97,6 +110,8 @@ const progressPercent = computed(() => {
   font-size: 12px;
   font-weight: 500;
   user-select: none;
+  position: relative;
+  z-index: 100;
 }
 
 .statusline-left,
@@ -210,6 +225,44 @@ const progressPercent = computed(() => {
   font-weight: 500;
   min-width: 35px;
   text-align: right;
+}
+
+/* Settings button */
+.settings-btn {
+  background: transparent;
+  border: 1px solid var(--nvim-border);
+  color: var(--nvim-fg-alt);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  min-width: 24px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  user-select: none;
+}
+
+.settings-btn:hover {
+  background: var(--nvim-selection);
+  border-color: var(--nvim-blue);
+  color: var(--nvim-blue);
+  transform: scale(1.05);
+}
+
+.settings-btn:active {
+  transform: scale(0.95);
+  background: var(--nvim-bg-dark);
+}
+
+.settings-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--nvim-blue);
 }
 
 /* Separator lines */

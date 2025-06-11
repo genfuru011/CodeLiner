@@ -8,6 +8,7 @@ import SettingsModal from './components/SettingsModal.vue'
 import FileIcon from './components/FileIcon.vue'
 import { useResponsive } from './composables/useResponsive'
 import { useStatusBar } from './composables/useStatusBar'
+import { useSettings } from './composables/useSettings'
 
 // Neovim theme is now integrated in main style.css
 
@@ -24,6 +25,9 @@ const {
   updateFileInfo, 
   setExecuting 
 } = useStatusBar()
+
+// Settings
+const { backgroundOpacity } = useSettings()
 
 // Mobile/Tablet layout state
 const showSidebar = ref(true)
@@ -163,11 +167,21 @@ const handleKeyDown = (event: KeyboardEvent) => {
 // Mount keyboard event listeners
 onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
+  // Initialize background opacity
+  updateBackgroundOpacity()
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeyDown)
 })
+
+// Update CSS custom property for background opacity
+const updateBackgroundOpacity = () => {
+  document.documentElement.style.setProperty('--bg-opacity', backgroundOpacity.value.toString())
+}
+
+// Watch for background opacity changes
+watch(backgroundOpacity, updateBackgroundOpacity)
 
 // Functions
 const saveFile = () => {
@@ -323,6 +337,7 @@ const closeCommandLine = () => {
       :line="parseInt(cursorPosition)"
       :column="1"
       :total-lines="totalLines"
+      @openSettings="showSettingsModal = true"
     />
 
     <!-- Command Line -->

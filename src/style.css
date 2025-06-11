@@ -1,11 +1,26 @@
 @import "tailwindcss";
 
+/* Root and HTML transparency */
+html, body, #app {
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
 /* Neovim風カラーテーマ - 統合版 */
 :root {
-  /* Neovim Base Colors */
-  --nvim-bg: #1e1e2e;
-  --nvim-bg-alt: #181825;
-  --nvim-bg-dark: #11111b;
+  /* Background Opacity */
+  --bg-opacity: 0.75;
+  
+  /* Neovim Base Colors - RGB values for transparency support */
+  --nvim-bg-rgb: 30, 30, 46;
+  --nvim-bg-alt-rgb: 24, 24, 37;
+  --nvim-bg-dark-rgb: 17, 17, 27;
+  
+  /* Neovim Base Colors - Original */
+  --nvim-bg: rgba(var(--nvim-bg-rgb), var(--bg-opacity));
+  --nvim-bg-alt: rgba(var(--nvim-bg-alt-rgb), var(--bg-opacity));
+  --nvim-bg-dark: rgba(var(--nvim-bg-dark-rgb), var(--bg-opacity));
   --nvim-fg: #cdd6f4;
   --nvim-fg-alt: #a6adc8;
   --nvim-fg-dim: #6c7086;
@@ -48,11 +63,12 @@
 
 /* Global Neovim Styling */
 body {
-  background-color: var(--nvim-bg);
+  background: transparent;
   color: var(--nvim-fg);
   font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', monospace;
   font-size: 14px;
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 /* Terminal-like scrollbar */
