@@ -1,0 +1,331 @@
+# CodeLiner Project Configuration
+# プロジェクト設定とメタデータ
+
+project:
+  name: "CodeLiner"
+  version: "0.1.0"
+  description: "軽量でシンプルなWebコードエディタ - HackMDライクなモダンデザイン"
+  type: "web-application"
+  license: "MIT"
+  author: "Hiroto"
+  created: "2025-06-11"
+  status: "active-development"
+
+# 技術スタック
+technology_stack:
+  frontend:
+    framework: "Vue.js 3"
+    language: "TypeScript"
+    build_tool: "Vite"
+    css_framework: "Tailwind CSS v4"
+    editor_engine: "Monaco Editor"
+    ui_components: "Headless UI"
+  
+  development_tools:
+    linter: "ESLint"
+    formatter: "Prettier"
+    css_processor: "PostCSS"
+    type_checker: "TypeScript Compiler"
+  
+  planned_backend:
+    framework: "Rails 8"
+    mode: "API mode"
+    database: "PostgreSQL"
+
+# 現在のプロジェクト構造
+project_structure:
+  source_directory: "src/"
+  components:
+    - "CommandLine.vue"
+    - "FileIcon.vue"
+    - "MonacoEditor.vue"
+    - "NeovimSidebar.vue"
+    - "NeovimStatusBar.vue"
+    - "SettingsModal.vue"
+  
+  composables:
+    - "useFileIcons.ts"
+    - "useResponsive.ts"
+    - "useSettings.ts"
+    - "useStatusBar.ts"
+  
+  assets:
+    icons_count: 60+
+    icon_types:
+      - "language-specific"
+      - "framework-specific"
+      - "folder-types"
+      - "special-files"
+
+# 機能ステータス
+features:
+  completed:
+    core_editor:
+      - "Monaco Editor integration"
+      - "JavaScript execution"
+      - "Keyboard shortcuts"
+      - "TypeScript support"
+    
+    ui_system:
+      - "Neovim theme"
+      - "HackMD-like design"
+      - "Responsive layout"
+      - "Settings modal"
+    
+    file_system:
+      - "File icon system"
+      - "Folder mappings"
+      - "Language detection"
+      - "Special file recognition"
+    
+    sidebar:
+      - "File explorer UI"
+      - "Tree navigation UI"
+      - "File operation buttons"  # UI only
+      - "Git status indicators"   # UI only
+    
+    status_bar:
+      - "Neovim-style display"
+      - "Mode indicator"
+      - "Cursor position tracking"
+      - "File type display"
+      - "Encoding display"
+      - "Progress percentage"
+      - "Git info UI"             # UI only
+  
+  partially_implemented:
+    file_operations:
+      status: "UI complete, logic pending"
+      details:
+        - "New file/folder buttons implemented"
+        - "Folder expand/collapse UI implemented"
+        - "File system integration pending"
+    
+    git_integration:
+      status: "UI complete, Git integration pending"
+      details:
+        - "Git status display UI implemented"
+        - "Branch info display UI implemented"
+        - "Actual Git integration pending"
+    
+    command_line:
+      status: "UI complete, functionality pending"
+      details:
+        - "Command line UI implemented"
+        - "Command execution logic pending"
+  
+  in_progress: []
+  
+  planned:
+    phase_0_ui_functionality:
+      priority: "highest"
+      items:
+        - "File create/delete implementation"
+        - "Folder expand/collapse logic"
+        - "File system connection"
+        - "Command line functionality"
+    
+    phase_1:
+      - "File save/load"
+      - "Multi-file editing"
+      - "Project management"
+      - "File operations completion"
+    
+    phase_2:
+      - "Python execution"
+      - "HTML/CSS preview"
+      - "Markdown preview"
+      - "Language extension"
+    
+    phase_3:
+      - "Rails API backend"
+      - "Git integration completion"
+      - "User authentication"
+      - "Project sharing"
+      - "Real-time collaboration"
+    
+    phase_4:
+      - "Debugger functionality"
+      - "Extension system"
+      - "Theme customization"
+
+# ファイルアイコンシステム設定
+file_icon_system:
+  type: "SVG-based"
+  source: "Material Icon Theme inspired"
+  total_icons: 60+
+  
+  language_support:
+    web_technologies:
+      - html
+      - css
+      - scss
+      - sass
+      - less
+      - javascript
+      - typescript
+      - vue
+      - react
+    
+    programming_languages:
+      - python
+      - java
+      - c
+      - cpp
+      - csharp
+      - php
+      - ruby
+      - go
+      - rust
+      - swift
+      - kotlin
+      - dart
+    
+    config_formats:
+      - json
+      - yaml
+      - xml
+      - toml
+      - sql
+  
+  folder_mappings:
+    development:
+      src: "#4fc08d"
+      components: "#61dafb"
+      utils: "#fbbf24"
+      lib: "#8b5cf6"
+    
+    documentation:
+      docs: "#3b82f6"
+      documentation: "#3b82f6"
+    
+    testing:
+      test: "#ef4444"
+      tests: "#ef4444"
+      spec: "#ef4444"
+    
+    configuration:
+      config: "#f59e0b"
+      ".vscode": "#007acc"
+      ".github": "#24292e"
+
+# デザインシステム
+design_system:
+  theme: "Neovim-inspired"
+  base_style: "HackMD-like"
+  
+  color_palette:
+    background:
+      primary: "#1a1b23"
+      secondary: "#2a2b35"
+      tertiary: "#343644"
+    
+    text:
+      primary: "#e4e6ea"
+      secondary: "#a8abb2"
+      muted: "#6b7280"
+    
+    accent:
+      blue: "#3b82f6"
+      green: "#10b981"
+      yellow: "#fbbf24"
+      purple: "#8b5cf6"
+      red: "#ef4444"
+  
+  typography:
+    font_family: "Inter, system-ui, sans-serif"
+    code_font: "JetBrains Mono, Monaco, monospace"
+  
+  spacing:
+    base_unit: "0.25rem"
+    container_padding: "1rem"
+    component_gap: "0.75rem"
+
+# パフォーマンス指標
+performance:
+  build:
+    dev_server_startup: "~443ms"
+    hmr_enabled: true
+    typescript_checking: "real-time"
+    bundle_optimization: "vite-optimized"
+  
+  code_quality:
+    typescript_coverage: "100%"
+    eslint_rules: "strict"
+    component_architecture: "composition-api"
+    state_management: "reactive-composables"
+
+# 開発メトリクス
+development_metrics:
+  code_statistics:
+    total_files: 100+
+    vue_components: 6
+    composables: 4
+    typescript_files: 8
+    svg_icons: 60+
+  
+  quality_assurance:
+    type_safety: "100%"
+    code_formatting: "prettier"
+    linting: "eslint"
+    architecture: "modern-vue3"
+
+# 既知の問題と制限
+known_issues:
+  current_limitations:
+    - "File persistence: Files lost on browser reload"
+    - "Language support: JavaScript execution only"
+    - "File upload: Not implemented"
+    - "Backend: Frontend only"
+  
+  resolved_issues:
+    - "Heroicons icon system: Changed to SVG-based ✅"
+    - "Docs folder color: Fixed to blue display ✅"
+    - "TypeScript type errors: Completely resolved ✅"
+    - "Settings modal design: Unified to Neovim style ✅"
+
+# 開発環境
+development_environment:
+  node_version: "v18+"
+  package_manager: "npm"
+  dev_server_port: "5173/5174"
+  build_output: "dist/"
+  
+  scripts:
+    dev: "vite"
+    build: "vue-tsc && vite build"
+    preview: "vite preview"
+    type_check: "vue-tsc --noEmit"
+
+# 最新の変更履歴
+recent_changes:
+  "2025-06-11":
+    - "File icon system restoration from Heroicons to SVG"
+    - "Comprehensive folder mapping implementation"
+    - "Docs folder blue color fix"
+    - "Debug logging cleanup"
+    - "Documentation creation"
+
+# 次のマイルストーン
+next_milestones:
+  immediate:
+    - "File persistence implementation"
+    - "Multi-file tab system"
+    - "Basic file operations"
+  
+  short_term:
+    - "Python execution environment"
+    - "HTML/CSS preview"
+    - "Project folder management"
+  
+  long_term:
+    - "Backend API development"
+    - "User authentication system"
+    - "Real-time collaboration"
+
+# メタデータ
+metadata:
+  last_updated: "2025-06-11"
+  documentation_version: "1.0"
+  config_format_version: "1.0"
+  maintainer: "Hiroto"

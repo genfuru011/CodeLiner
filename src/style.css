@@ -1,21 +1,80 @@
 @import "tailwindcss";
 
-/* CodeLiner - HackMD inspired styles */
-@theme {
-  --color-dark-bg: #1a1b23;
-  --color-dark-surface: #2a2b35;
-  --color-dark-surface-hover: #343644;
-  --color-dark-border: #3a3b47;
-  --color-dark-text: #e4e6ea;
-  --color-dark-text-muted: #a8abb2;
-  --color-accent: #4285f4;
-  --color-accent-hover: #5a95f5;
+/* Neovim風カラーテーマ - 統合版 */
+:root {
+  /* Neovim Base Colors */
+  --nvim-bg: #1e1e2e;
+  --nvim-bg-alt: #181825;
+  --nvim-bg-dark: #11111b;
+  --nvim-fg: #cdd6f4;
+  --nvim-fg-alt: #a6adc8;
+  --nvim-fg-dim: #6c7086;
+  
+  /* Neovim Accent Colors */
+  --nvim-blue: #89b4fa;
+  --nvim-green: #a6e3a1;
+  --nvim-yellow: #f9e2af;
+  --nvim-red: #f38ba8;
+  --nvim-pink: #f5c2e7;
+  --nvim-purple: #cba6f7;
+  --nvim-orange: #fab387;
+  --nvim-cyan: #94e2d5;
+  
+  /* Mode Colors */
+  --nvim-normal: #89b4fa;
+  --nvim-insert: #a6e3a1;
+  --nvim-visual: #f9e2af;
+  --nvim-command: #cba6f7;
+  
+  /* UI Elements */
+  --nvim-border: #45475a;
+  --nvim-selection: #313244;
+  --nvim-cursor: #f5e0dc;
+  --nvim-line-number: #6c7086;
+  --nvim-comment: #7f849c;
+
+  /* Legacy Theme Variables (for compatibility) */
+  --color-dark-bg: var(--nvim-bg);
+  --color-dark-surface: var(--nvim-bg-alt);
+  --color-dark-surface-hover: var(--nvim-selection);
+  --color-dark-border: var(--nvim-border);
+  --color-dark-text: var(--nvim-fg);
+  --color-dark-text-muted: var(--nvim-fg-dim);
+  --color-accent: var(--nvim-blue);
+  --color-accent-hover: var(--nvim-blue);
   
   --font-family-mono: "JetBrains Mono", Monaco, Consolas, monospace;
 }
 
+/* Global Neovim Styling */
+body {
+  background-color: var(--nvim-bg);
+  color: var(--nvim-fg);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Terminal-like scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--nvim-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nvim-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nvim-fg-dim);
+}
+
 /* Custom components */
 .code-editor-theme {
-  background-color: var(--color-dark-bg);
-  color: var(--color-dark-text);
+  background-color: var(--nvim-bg);
+  color: var(--nvim-fg);
 }

@@ -9,7 +9,8 @@ import FileIcon from './components/FileIcon.vue'
 import { useResponsive } from './composables/useResponsive'
 import { useStatusBar } from './composables/useStatusBar'
 
-// Neovim theme is now integrated in main style.css
+// Import Neovim theme
+import './styles/neovim-theme.css'
 
 // Responsive design
 const { isMobile } = useResponsive()
@@ -25,7 +26,7 @@ const {
   setExecuting 
 } = useStatusBar()
 
-// Mobile/Tablet layout state
+// Mobile/Tablet layout state (override settings for mobile/tablet)
 const showSidebar = ref(true)
 const showConsole = ref(true)
 const activePanel = ref<'editor' | 'console'>('editor')
@@ -80,8 +81,8 @@ const switchPanel = (panel: 'editor' | 'console') => {
   activePanel.value = panel
 }
 
-// Code execution function
 const runCode = () => {
+  // Simple JavaScript execution (for demo purposes)
   setExecuting(true)
   
   try {
@@ -127,7 +128,7 @@ watch(code, () => {
   updateFileStats()
 }, { deep: true })
 
-// Keyboard shortcuts
+// Mount keyboard event listeners
 const handleKeyDown = (event: KeyboardEvent) => {
   // Cmd/Ctrl + , for Settings
   if ((event.metaKey || event.ctrlKey) && event.key === ',') {
@@ -171,6 +172,7 @@ onUnmounted(() => {
 
 // Functions
 const saveFile = () => {
+  // TODO: Implement file saving functionality
   console.log('File saved:', activeFile.value)
 }
 
@@ -181,9 +183,11 @@ const toggleSidebarCollapse = () => {
 
 const handleFileSelect = (path: string) => {
   activeFile.value = path
+  // TODO: Load file content
 }
 
 const handleFolderToggle = (path: string) => {
+  // TODO: Toggle folder expansion
   console.log('Toggle folder:', path)
 }
 
@@ -197,6 +201,7 @@ const handleCommandExecute = (command: string) => {
       break
     case 'quit':
     case 'q':
+      // TODO: Implement quit functionality
       console.log('Quit')
       break
     case 'save-quit':
@@ -334,6 +339,7 @@ const closeCommandLine = () => {
 
     <!-- Settings Modal -->
     <SettingsModal
+      v-if="showSettingsModal"
       :isOpen="showSettingsModal"
       @close="showSettingsModal = false"
     />
@@ -426,6 +432,13 @@ const closeCommandLine = () => {
 .panel-btn:not(.active):hover {
   background: var(--nvim-selection);
   color: var(--nvim-fg);
+}
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .tab-bar {

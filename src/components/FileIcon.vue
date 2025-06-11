@@ -1,18 +1,12 @@
 <template>
-  <span 
-    class="file-icon inline-flex items-center justify-center"
+  <img 
+    :src="fileIcon.icon"
+    :alt="`${fileName} icon`"
+    class="file-icon flex-shrink-0"
     :style="iconStyle"
-  >
-    <!-- SVGアイコンの場合 -->
-    <img 
-      v-if="fileIcon.type === 'svg'"
-      :src="fileIcon.icon"
-      :alt="`${fileName} icon`"
-      class="svg-icon"
-    />
-    <!-- emojiアイコンの場合 -->
-    <span v-else>{{ fileIcon.icon }}</span>
-  </span>
+    loading="lazy"
+    @error="onImageError"
+  />
 </template>
 
 <script setup lang="ts">
@@ -39,22 +33,31 @@ const fileIcon = computed<FileIcon>(() =>
 
 // アイコンのスタイル
 const iconStyle = computed(() => ({
-  fontSize: `${props.size}px`,
-  lineHeight: '1',
-  // SVGアイコンの場合は色をSVG内で管理するため、emojiの場合のみ色を適用
-  ...(fileIcon.value.type === 'emoji' && { color: fileIcon.value.color })
+  width: `${props.size}px`,
+  height: `${props.size}px`,
+  filter: `brightness(1.1) saturate(1.1)`,
+  color: fileIcon.value.color
 }))
+
+// 画像読み込みエラー時のフォールバック
+const onImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement
+  // フォールバックアイコンを設定
+  img.src = '/src/assets/icons/file.svg'
+}
 </script>
 
 <style scoped>
 .file-icon {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.svg-icon {
-  width: 1em;
-  height: 1em;
-  object-fit: contain;
-  display: block;
+.file-icon:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2) saturate(1.2);
 }
 </style>
