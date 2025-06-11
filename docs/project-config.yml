@@ -279,10 +279,10 @@ known_issues:
     - "Backend: Frontend only"
   
   resolved_issues:
-    - "Heroicons icon system: Changed to SVG-based ✅"
-    - "Docs folder color: Fixed to blue display ✅"
-    - "TypeScript type errors: Completely resolved ✅"
-    - "Settings modal design: Unified to Neovim style ✅"
+    - "Heroicons icon system: Changed to SVG-based [DONE]"
+    - "Docs folder color: Fixed to blue display [DONE]"
+    - "TypeScript type errors: Completely resolved [DONE]"
+    - "Settings modal design: Unified to Neovim style [DONE]"
 
 # 開発環境
 development_environment:

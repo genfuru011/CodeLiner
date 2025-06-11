@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="sidebar-header">
       <div class="header-title">
-        <span class="tree-icon">🌳</span>
+        <span class="tree-icon">~</span>
         <span v-if="!isCollapsed" class="title-text">Neo-tree</span>
       </div>
       <button 
@@ -11,7 +11,7 @@
         class="collapse-btn"
         @click="$emit('toggle')"
       >
-        ✕
+        x
       </button>
     </div>
 
@@ -19,7 +19,7 @@
     <div v-if="!isCollapsed" class="file-tree">
       <!-- Current directory -->
       <div class="current-dir">
-        <span class="dir-icon">📁</span>
+        <span class="dir-icon">[+]</span>
         <span class="dir-path">{{ currentDirectory }}</span>
       </div>
 
@@ -75,7 +75,7 @@
         @click="$emit('toggle')"
         title="Expand Neo-tree"
       >
-        📁
+        [+]
       </button>
     </div>
 
@@ -86,21 +86,21 @@
         @click="$emit('new-file')"
         title="New file"
       >
-        📄+
+        [+f]
       </button>
       <button 
         class="action-btn" 
         @click="$emit('new-folder')"
         title="New folder"
       >
-        📁+
+        [+d]
       </button>
       <button 
         class="action-btn" 
         @click="$emit('refresh')"
         title="Refresh"
       >
-        🔄
+        R
       </button>
     </div>
   </div>

@@ -3,12 +3,12 @@
     <div class="bg-dark-surface border-2 border-accent rounded-lg w-full max-w-2xl mx-4 shadow-xl">
       <!-- Header -->
       <div class="flex items-center justify-between p-4 border-b border-dark-border">
-        <h2 class="text-lg font-semibold text-accent">⚙ Settings</h2>
+        <h2 class="text-lg font-semibold text-accent">Settings</h2>
         <button 
           @click="$emit('close')"
           class="text-dark-text-muted hover:text-accent transition-colors"
         >
-          ✕
+          x
         </button>
       </div>
 
@@ -16,7 +16,7 @@
       <div class="p-4 space-y-6 max-h-96 overflow-y-auto">
         <!-- Editor Settings -->
         <section>
-          <h3 class="text-accent font-medium mb-3 border-b border-dark-border pb-1">📝 Editor</h3>
+          <h3 class="text-accent font-medium mb-3 border-b border-dark-border pb-1">Editor</h3>
           <div class="space-y-3">
             <!-- Status Bar Toggle -->
             <div class="flex items-center justify-between">
@@ -70,7 +70,7 @@
 
         <!-- Appearance Settings -->
         <section>
-          <h3 class="text-accent font-medium mb-3 border-b border-dark-border pb-1">🎨 Appearance</h3>
+          <h3 class="text-accent font-medium mb-3 border-b border-dark-border pb-1">Appearance</h3>
           <div class="space-y-3">
             <!-- Theme Selection -->
             <div class="flex items-center justify-between">
@@ -82,8 +82,8 @@
                 v-model="theme"
                 class="bg-dark-bg border border-dark-border rounded px-2 py-1 text-dark-text text-xs focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
               >
-                <option value="dark">🌙 Dark</option>
-                <option value="light">☀️ Light</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
               </select>
             </div>
 

@@ -253,7 +253,7 @@ const closeCommandLine = () => {
         <!-- Mobile Header (only on mobile) -->
         <div v-if="isMobile" class="mobile-header">
           <button @click="toggleSidebar" class="mobile-menu-btn">
-            {{ showSidebar ? '✕' : '☰' }}
+            {{ showSidebar ? 'x' : '☰' }}
           </button>
           <span class="mobile-title">CodeLiner</span>
           <div class="mobile-panel-switcher">
@@ -305,7 +305,7 @@ const closeCommandLine = () => {
                 @click="toggleConsole"
                 class="console-close"
               >
-                ✕
+                x
               </button>
             </div>
           </div>

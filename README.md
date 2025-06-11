@@ -8,22 +8,22 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![Monaco Editor](https://img.shields.io/badge/Monaco%20Editor-VS%20Code%20Engine-007ACC?style=flat-square&logo=visual-studio-code)](https://microsoft.github.io/monaco-editor/)
 
-## 🚀 概要
+## 概要
 
 CodeLinerは、**Neovim**と**HackMD**からインスピレーションを得たモダンデザインを採用した軽量・シンプルなWebコードエディタです。VS Codeと同じMonaco Editorエンジンを搭載し、美しいファイルアイコンシステムと直感的なUIで、高速で快適な開発体験を提供します。
 
-## ✨ 特徴
+## 特徴
 
-- 🎨 **Neovim インスパイアドデザイン** - ダークテーマと開発者フレンドリーなUI
-- ⚡ **軽量・高速** - Vue.js 3 + Vite による瞬時の起動と高速HMR
-- 🔧 **Monaco Editor搭載** - VS Codeと同じエディタエンジンによる高機能編集
-- 🎯 **学習容易** - シンプルな技術スタックで簡単に理解・拡張可能
+- **Neovim インスパイアドデザイン** - ダークテーマと開発者フレンドリーなUI
+- **軽量・高速** - Vue.js 3 + Vite による瞬時の起動と高速HMR
+- **Monaco Editor搭載** - VS Codeと同じエディタエンジンによる高機能編集
+- **学習容易** - シンプルな技術スタックで簡単に理解・拡張可能
 - ⌨️ **キーボードショートカット** - Ctrl+S (保存), Ctrl+Enter (実行)
-- 🌙 **美しいダークテーマ** - 目に優しく長時間作業に最適
-- 📁 **Material Icon Theme** - 60+のSVGアイコンによる視覚的ファイル管理
-- 📱 **完全レスポンシブ** - デスクトップ・タブレット・モバイル対応
+- **美しいダークテーマ** - 目に優しく長時間作業に最適
+- **Material Icon Theme** - 60+のSVGアイコンによる視覚的ファイル管理
+- **完全レスポンシブ** - デスクトップ・タブレット・モバイル対応
 
-## 🛠️ 技術スタック
+## 技術スタック
 
 ### Frontend
 - **Vue.js 3** (Composition API) - Progressive JavaScript Framework
@@ -42,7 +42,7 @@ CodeLinerは、**Neovim**と**HackMD**からインスピレーションを得た
 ### 予定している Backend
 - **Rails 8 API mode** - 軽量で高速なAPI開発
 
-## 🚦 セットアップ
+## セットアップ
 
 ### 必要環境
 - Node.js (v18以上)
@@ -78,9 +78,9 @@ npm run preview
 npm run type-check
 ```
 
-## 🎯 機能
+## 機能
 
-### ✅ 実装済み機能
+### 実装済み機能
 - **Monaco Editor統合** - VS Codeと同じエディタエンジンによる高機能編集
 - **JavaScript実行** - リアルタイムコード実行とコンソール出力
 - **Material Icon Theme** - 60+言語・フレームワーク対応のSVGアイコン
@@ -91,18 +91,18 @@ npm run type-check
 - **キーボードショートカット** - 効率的な操作
 - **完全レスポンシブ** - 全デバイス対応
 
-### ⚠️ UI実装済み・機能実装中
+### UI実装済み・機能実装中
 - **ファイル作成/削除** - ボタンUI実装済み、実際の操作機能は開発中
 - **フォルダ展開/折りたたみ** - UI実装済み、ファイルシステム接続は開発中
 - **Git状態表示** - ステータス表示UI実装済み、実際のGit統合は開発中
 - **コマンドライン** - UI実装済み、コマンド実行機能は開発中
 
-### 🔄 開発中の機能
+### 開発中の機能
 - 複数ファイル同時編集
 - ファイル保存/読み込み機能
 - プロジェクト管理システム
 
-### 🔮 今後の機能予定
+### 今後の機能予定
 #### Phase 0: UI機能化（最優先）
 - [ ] ファイル作成/削除機能の実装（UIは実装済み）
 - [ ] フォルダ展開/折りたたみ機能の実装（UIは実装済み）
@@ -133,7 +133,7 @@ npm run type-check
 - [ ] 拡張機能システム
 - [ ] カスタムテーマ作成
 
-## 🎨 デザインシステム
+## デザインシステム
 
 ### Neovimインスパイアド カラーパレット
 ```css
@@ -163,7 +163,7 @@ CodeLinerは、**Material Icon Theme**からインスピレーションを得た
 - **フォルダタイプ別** - src, docs, test, config等の用途別アイコン
 - **特殊ファイル** - package.json, README.md, .gitignore等
 
-## 📁 プロジェクト構造
+## プロジェクト構造
 
 ```
 src/
@@ -187,7 +187,7 @@ src/
 └── style.css           # グローバルスタイル
 ```
 
-## 📚 ドキュメント
+## ドキュメント
 
 詳細なドキュメントは`docs/`フォルダにあります：
 
@@ -195,7 +195,7 @@ src/
 - **[技術仕様書](docs/technical-specifications.md)** - アーキテクチャと実装詳細
 - **[プロジェクト設定](docs/project-config.yml)** - YAML形式の設定情報
 
-## 🤝 コントリビューション
+## コントリビューション
 
 1. このリポジトリをフォーク
 2. 機能ブランチを作成 (`git checkout -b feature/amazing-feature`)
@@ -203,11 +203,11 @@ src/
 4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
 5. Pull Requestを作成
 
-## 📄 ライセンス
+## ライセンス
 
 MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照
 
-## 🙏 謝辞
+## 謝辞
 
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) - Microsoft
 - [Vue.js](https://vuejs.org/) - Vue.js Team  
@@ -220,7 +220,7 @@ MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照
 
 ---
 
-## 🏷️ バージョン情報
+## バージョン情報
 
 **Current Version**: 0.1.0  
 **Status**: Active Development  
