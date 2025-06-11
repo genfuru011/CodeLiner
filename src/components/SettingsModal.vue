@@ -112,13 +112,13 @@
               </div>
               <button
                 @click="toggleTransparency"
+                aria-label="Toggle background transparency"
                 :class="[
                   'relative inline-flex h-5 w-9 items-center rounded-full transition-colors border',
                   isTransparent 
                     ? 'bg-accent border-accent' 
                     : 'bg-dark-bg border-dark-border'
                 ]"
-              >
                 <span
                   :class="[
                     'inline-block h-3 w-3 transform rounded-full transition-transform',
