@@ -126,4 +126,9 @@ MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/) - Microsoft
 - [Vue.js](https://vuejs.org/) - Vue.js Team
 - [Tailwind CSS](https://tailwindcss.com/) - Tailwind Labs
+- [Material Icon Theme](https://github.com/PKief/vscode-material-icon-theme) - Philipp Kief (ファイルアイコンシステム)
 - [HackMD](https://hackmd.io/) - デザインインスピレーション
+
+詳細な帰属表示については [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) をご覧ください。
+
+詳細な帰属表示については [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) をご覧ください。

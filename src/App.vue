@@ -3,6 +3,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import MonacoEditor from './components/MonacoEditor.vue'
 import StatusBar from './components/StatusBar.vue'
 import SettingsModal from './components/SettingsModal.vue'
+import FileIcon from './components/FileIcon.vue'
 import { useResizablePanels } from './composables/useResizablePanels'
 import { useResponsive } from './composables/useResponsive'
 import { useStatusBar } from './composables/useStatusBar'
@@ -253,16 +254,44 @@ const runCode = () => {
           </div>
           <div class="space-y-1">
             <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
-              <span class="text-accent text-xs">●</span>
+              <FileIcon :file-name="activeFile" :size="14" />
               <span class="text-sm">{{ activeFile }}</span>
             </div>
             <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
-              <span class="text-dark-text-muted text-xs">○</span>
+              <FileIcon file-name="index.html" :size="14" />
+              <span class="text-sm text-dark-text-muted">index.html</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="style.css" :size="14" />
               <span class="text-sm text-dark-text-muted">style.css</span>
             </div>
             <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
-              <span class="text-dark-text-muted text-xs">○</span>
+              <FileIcon file-name="script.ts" :size="14" />
+              <span class="text-sm text-dark-text-muted">script.ts</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="component.vue" :size="14" />
+              <span class="text-sm text-dark-text-muted">component.vue</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="package.json" :size="14" />
               <span class="text-sm text-dark-text-muted">package.json</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="README.md" :size="14" />
+              <span class="text-sm text-dark-text-muted">README.md</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="data.json" :size="14" />
+              <span class="text-sm text-dark-text-muted">data.json</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="app.py" :size="14" />
+              <span class="text-sm text-dark-text-muted">app.py</span>
+            </div>
+            <div class="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-dark-surface-hover cursor-pointer transition-colors">
+              <FileIcon file-name="docs" :is-directory="true" :size="14" />
+              <span class="text-sm text-dark-text-muted">docs/</span>
             </div>
           </div>
         </div>
@@ -291,8 +320,9 @@ const runCode = () => {
         <!-- Tab Bar -->
         <div class="bg-dark-surface border-b border-dark-border px-4">
           <div class="flex">
-            <div class="px-3 md:px-4 py-2 bg-dark-bg text-dark-text text-xs md:text-sm border-r border-dark-border flex items-center">
-              {{ activeFile }}
+            <div class="px-3 md:px-4 py-2 bg-dark-bg text-dark-text text-xs md:text-sm border-r border-dark-border flex items-center space-x-2">
+              <FileIcon :file-name="activeFile" :size="12" />
+              <span>{{ activeFile }}</span>
               <button class="ml-2 text-dark-text-muted hover:text-dark-text transition-colors">×</button>
             </div>
           </div>
