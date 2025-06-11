@@ -321,7 +321,7 @@ const runCode = () => {
         <div class="bg-dark-surface border-b border-dark-border px-4">
           <div class="flex">
             <div class="px-3 md:px-4 py-2 bg-dark-bg text-dark-text text-xs md:text-sm border-r border-dark-border flex items-center space-x-2">
-              <FileIcon :file-name="activeFile" :size="12" />
+              <FileIcon :file-name="activeFile" :size="12" :aria-label="`File icon for ${activeFile}`" />
               <span>{{ activeFile }}</span>
               <button class="ml-2 text-dark-text-muted hover:text-dark-text transition-colors">×</button>
             </div>
