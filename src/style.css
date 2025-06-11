@@ -2,10 +2,18 @@
 
 /* Neovim風カラーテーマ - 統合版 */
 :root {
-  /* Neovim Base Colors */
-  --nvim-bg: #1e1e2e;
-  --nvim-bg-alt: #181825;
-  --nvim-bg-dark: #11111b;
+  /* Background Opacity */
+  --bg-opacity: 0.95;
+  
+  /* Neovim Base Colors - RGB values for transparency support */
+  --nvim-bg-rgb: 30, 30, 46;
+  --nvim-bg-alt-rgb: 24, 24, 37;
+  --nvim-bg-dark-rgb: 17, 17, 27;
+  
+  /* Neovim Base Colors - Original */
+  --nvim-bg: rgba(var(--nvim-bg-rgb), var(--bg-opacity));
+  --nvim-bg-alt: rgba(var(--nvim-bg-alt-rgb), var(--bg-opacity));
+  --nvim-bg-dark: rgba(var(--nvim-bg-dark-rgb), var(--bg-opacity));
   --nvim-fg: #cdd6f4;
   --nvim-fg-alt: #a6adc8;
   --nvim-fg-dim: #6c7086;
@@ -48,11 +56,23 @@
 
 /* Global Neovim Styling */
 body {
-  background-color: var(--nvim-bg);
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(137, 180, 250, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(166, 227, 161, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(203, 166, 247, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, 
+      #0f0f23 0%, 
+      #1a1a2e 25%, 
+      #16213e 50%, 
+      #1a1a2e 75%, 
+      #0f0f23 100%);
+  background-attachment: fixed;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   color: var(--nvim-fg);
   font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', monospace;
   font-size: 14px;
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 /* Terminal-like scrollbar */

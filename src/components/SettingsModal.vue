@@ -103,6 +103,25 @@
                 <option value="18">18px</option>
               </select>
             </div>
+
+            <!-- Background Opacity -->
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <label class="text-dark-text text-sm font-medium">Background Opacity</label>
+                <p class="text-dark-text-muted text-xs">Transparency level ({{ Math.round(backgroundOpacity * 100) }}%)</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <input
+                  type="range"
+                  v-model.number="backgroundOpacity"
+                  min="0.5"
+                  max="1"
+                  step="0.05"
+                  class="w-20 h-1 bg-dark-border rounded-lg appearance-none cursor-pointer slider"
+                />
+                <span class="text-xs text-dark-text-muted w-8 text-right">{{ Math.round(backgroundOpacity * 100) }}%</span>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -143,6 +162,7 @@ const {
   autoSave,
   theme,
   fontSize,
+  backgroundOpacity,
   resetSettings
 } = useSettings()
 
@@ -155,4 +175,44 @@ const toggleAutoSave = () => {
   autoSave.value = !autoSave.value
 }
 </script>
+
+<style scoped>
+/* Slider styling for background opacity */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--nvim-blue);
+  cursor: pointer;
+  border: 2px solid var(--nvim-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-webkit-slider-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: var(--nvim-border);
+  border-radius: 2px;
+}
+
+.slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--nvim-blue);
+  cursor: pointer;
+  border: 2px solid var(--nvim-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: var(--nvim-border);
+  border-radius: 2px;
+}
+</style>
 

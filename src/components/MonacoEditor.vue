@@ -47,15 +47,15 @@ onMounted(() => {
           { token: 'function', foreground: '64b5f6' },
         ],
         colors: {
-          'editor.background': '#1a1b23',
+          'editor.background': '#00000000', // Transparent background
           'editor.foreground': '#e4e6ea',
-          'editor.lineHighlightBackground': '#2a2b35',
-          'editor.selectionBackground': '#343644',
+          'editor.lineHighlightBackground': '#2a2b3520',
+          'editor.selectionBackground': '#34364430',
           'editorCursor.foreground': '#4285f4',
           'editorLineNumber.foreground': '#a8abb2',
           'editorLineNumber.activeForeground': '#e4e6ea',
-          'editor.selectionHighlightBackground': '#343644',
-          'editor.wordHighlightBackground': '#343644',
+          'editor.selectionHighlightBackground': '#34364430',
+          'editor.wordHighlightBackground': '#34364430',
         }
       })
 
