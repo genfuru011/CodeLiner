@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import MonacoEditor from './components/MonacoEditor.vue'
 import NeovimStatusBar from './components/NeovimStatusBar.vue'
 import NeovimSidebar from './components/NeovimSidebar.vue'
 import CommandLine from './components/CommandLine.vue'
 import SettingsModal from './components/SettingsModal.vue'
-import FileIcon from './components/FileIcon.vue'
+import TabBar from './components/TabBar.vue'
 import { useResponsive } from './composables/useResponsive'
 import { useStatusBar } from './composables/useStatusBar'
 import { useSettings } from './composables/useSettings'
-
-// Neovim theme is now integrated in main style.css
+import { useFileSystem } from './composables/useFileSystem'
+import { useTabManager } from './composables/useTabManager'
 
 // Responsive design
 const { isMobile } = useResponsive()
@@ -29,6 +29,29 @@ const {
 // Settings
 const { backgroundOpacity } = useSettings()
 
+// File system
+const {
+  saveFile,
+  loadFile,
+  createNewFile,
+  createFolder,
+  init: initFileSystem
+} = useFileSystem()
+
+// Tab management
+const {
+  activeTabs,
+  activeTab,
+  activeTabId,
+  createTab,
+  closeTab,
+  setActiveTab,
+  updateTabContent,
+  markTabSaved,
+  updateCursorPosition: updateTabCursorPosition,
+  handleKeyboardShortcuts
+} = useTabManager()
+
 // Mobile/Tablet layout state
 const showSidebar = ref(true)
 const showConsole = ref(true)
@@ -42,34 +65,12 @@ const currentMode = ref<'normal' | 'insert' | 'visual' | 'command'>('normal')
 const showCommandLine = ref(false)
 const sidebarCollapsed = ref(false)
 
-// File tree (mock data for demo)
-const fileTree = ref([
-  { name: 'main.js', path: '/main.js', type: 'file' as const, depth: 0, gitStatus: 'modified' as const },
-  { name: 'index.html', path: '/index.html', type: 'file' as const, depth: 0 },
-  { name: 'style.css', path: '/style.css', type: 'file' as const, depth: 0 },
-  { name: 'script.ts', path: '/script.ts', type: 'file' as const, depth: 0 },
-  { name: 'component.vue', path: '/component.vue', type: 'file' as const, depth: 0 },
-  { name: 'package.json', path: '/package.json', type: 'file' as const, depth: 0 },
-  { name: 'README.md', path: '/README.md', type: 'file' as const, depth: 0 },
-  { name: 'data.json', path: '/data.json', type: 'file' as const, depth: 0 },
-  { name: 'app.py', path: '/app.py', type: 'file' as const, depth: 0 },
-  { name: 'docs/', path: '/docs', type: 'directory' as const, depth: 0, expanded: false }
-])
+// Current editor content and output
+const code = computed(() => activeTab.value?.content || '')
+const output = ref('Welcome to CodeLiner!\nReady to code...')
 
-// State management
-const activeFile = ref('main.js')
-const code = ref(`// Welcome to CodeLiner
-console.log('Hello, World!');
-
-// HackMD inspired code editor
-function greet(name) {
-  return \`Hello, \${name}!\`;
-}
-
-const message = greet('CodeLiner');
-console.log(message);`)
-
-const output = ref('Hello, World!\nHello, CodeLiner!')
+// Current active file name for display
+const activeFileName = computed(() => activeTab.value?.fileName || 'No file')
 
 // Mobile/Tablet functions
 const toggleSidebar = () => {
@@ -84,8 +85,94 @@ const switchPanel = (panel: 'editor' | 'console') => {
   activePanel.value = panel
 }
 
+// Folder toggle handler
+const handleFolderToggle = (path: string) => {
+  console.log('Toggle folder:', path)
+  // TODO: Implement folder expansion logic
+}
+
+// File operations
+const handleFileSelect = async (path: string) => {
+  try {
+    const file = await loadFile(path)
+    if (file) {
+      const tabId = createTab(file)
+      setActiveTab(tabId)
+    }
+  } catch (error) {
+    console.error('Failed to open file:', error)
+    output.value = `Error: Failed to open file ${path}`
+  }
+}
+
+const handleNewFile = async () => {
+  try {
+    const fileName = prompt('Enter file name:', 'untitled.js')
+    if (!fileName) return
+    
+    const path = `/${fileName}`
+    const fileId = await createNewFile(fileName, path, '// New file\n')
+    const file = await loadFile(fileId)
+    
+    if (file) {
+      const tabId = createTab(file)
+      setActiveTab(tabId)
+    }
+  } catch (error) {
+    console.error('Failed to create file:', error)
+    output.value = `Error: Failed to create new file`
+  }
+}
+
+const handleNewFolder = async () => {
+  try {
+    const folderName = prompt('Enter folder name:', 'new-folder')
+    if (!folderName) return
+    
+    const path = `/${folderName}`
+    await createFolder({
+      name: folderName,
+      path,
+      children: [],
+      expanded: false
+    })
+    
+    // Refresh file tree
+    await refreshFileTree()
+  } catch (error) {
+    console.error('Failed to create folder:', error)
+    output.value = `Error: Failed to create folder`
+  }
+}
+
+const handleSaveFile = async () => {
+  if (!activeTab.value) return
+  
+  try {
+    await saveFile({
+      name: activeTab.value.fileName,
+      path: activeTab.value.filePath,
+      content: activeTab.value.content,
+      language: activeTab.value.language
+    })
+    
+    markTabSaved(activeTab.value.id)
+    output.value = `Saved: ${activeTab.value.fileName}`
+  } catch (error) {
+    console.error('Failed to save file:', error)
+    output.value = `Error: Failed to save ${activeTab.value.fileName}`
+  }
+}
+
+const refreshFileTree = async () => {
+  console.log('Refreshing file tree...')
+  // TODO: Implement file tree refresh from file system
+}
+
 // Code execution function
 const runCode = () => {
+  if (!code.value) return
+  
   setExecuting(true)
   
   try {
@@ -116,23 +203,49 @@ const runCode = () => {
 // Status bar event handlers
 const handleCursorChange = (line: number, column: number) => {
   updateCursorPosition(line, column)
+  if (activeTabId.value) {
+    updateTabCursorPosition(activeTabId.value, line, column)
+  }
+}
+
+// Content change handler
+const handleContentChange = (newContent: string) => {
+  if (activeTabId.value) {
+    updateTabContent(activeTabId.value, newContent)
+  }
 }
 
 // Watch for code changes to update file info
 const updateFileStats = () => {
-  updateFileInfo(code.value, 'javascript')
+  if (activeTab.value) {
+    updateFileInfo(code.value, activeTab.value.language)
+  }
 }
 
-// Initialize file stats
-updateFileStats()
-
-// Watch code changes to update file statistics
-watch(code, () => {
+// Watch active tab changes
+watch(activeTab, () => {
   updateFileStats()
-}, { deep: true })
+})
 
 // Keyboard shortcuts
 const handleKeyDown = (event: KeyboardEvent) => {
+  // Handle tab shortcuts first
+  handleKeyboardShortcuts(event)
+  
+  // Cmd/Ctrl + S for Save
+  if ((event.metaKey || event.ctrlKey) && event.key === 's') {
+    event.preventDefault()
+    handleSaveFile()
+    return
+  }
+  
+  // Cmd/Ctrl + N for New File
+  if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
+    event.preventDefault()
+    handleNewFile()
+    return
+  }
+  
   // Cmd/Ctrl + , for Settings
   if ((event.metaKey || event.ctrlKey) && event.key === ',') {
     event.preventDefault()
@@ -185,22 +298,24 @@ const updateBackgroundOpacity = () => {
 // Watch for background opacity changes
 watch(backgroundOpacity, updateBackgroundOpacity)
 
-// Functions
-const saveFile = () => {
-  console.log('File saved:', activeFile.value)
-}
+// Initialize file system on mount
+onMounted(async () => {
+  document.addEventListener('keydown', handleKeyDown)
+  updateBackgroundOpacity()
+  document.documentElement.style.setProperty('--bg-opacity', '0.75')
+  
+  // Initialize file system
+  try {
+    await initFileSystem()
+    console.log('File system initialized')
+  } catch (error) {
+    console.error('Failed to initialize file system:', error)
+  }
+})
 
 // Neovim functions
 const toggleSidebarCollapse = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
-}
-
-const handleFileSelect = (path: string) => {
-  activeFile.value = path
-}
-
-const handleFolderToggle = (path: string) => {
-  console.log('Toggle folder:', path)
 }
 
 const handleCommandExecute = (command: string) => {
@@ -209,7 +324,7 @@ const handleCommandExecute = (command: string) => {
   switch (command) {
     case 'save':
     case 'w':
-      saveFile()
+      handleSaveFile()
       break
     case 'quit':
     case 'q':
@@ -217,7 +332,7 @@ const handleCommandExecute = (command: string) => {
       break
     case 'save-quit':
     case 'wq':
-      saveFile()
+      handleSaveFile()
       console.log('Save and quit')
       break
     case 'open-command-line':
@@ -248,15 +363,15 @@ const closeCommandLine = () => {
       <NeovimSidebar
         v-if="!isMobile || showSidebar"
         :is-collapsed="sidebarCollapsed"
-        :file-tree="fileTree"
-        :selected-file="activeFile"
+        :file-tree="[]"
+        :selected-file="activeTab?.filePath || ''"
         current-directory="/Users/hiroto/Documents/CodeLiner"
         @toggle="toggleSidebarCollapse"
         @file-select="handleFileSelect"
         @folder-toggle="handleFolderToggle"
-        @new-file="() => console.log('New file')"
-        @new-folder="() => console.log('New folder')"
-        @refresh="() => console.log('Refresh')"
+        @new-file="handleNewFile"
+        @new-folder="handleNewFolder"
+        @refresh="refreshFileTree"
       />
 
       <!-- Main Editor Area -->
@@ -266,7 +381,7 @@ const closeCommandLine = () => {
           <button @click="toggleSidebar" class="mobile-menu-btn">
             {{ showSidebar ? 'x' : '☰' }}
           </button>
-          <span class="mobile-title">CodeLiner</span>
+          <span class="mobile-title">{{ activeFileName }}</span>
           <div class="mobile-panel-switcher">
             <button 
               @click="switchPanel('editor')"
@@ -284,13 +399,13 @@ const closeCommandLine = () => {
         </div>
 
         <!-- Tab Bar -->
-        <div class="tab-bar">
-          <div class="tab active">
-            <FileIcon :fileName="activeFile" :size="16" />
-            <span class="tab-name">{{ activeFile }}</span>
-            <button class="tab-close">×</button>
-          </div>
-        </div>
+        <TabBar
+          :tabs="activeTabs"
+          :active-tab-id="activeTabId"
+          @tab-select="setActiveTab"
+          @tab-close="closeTab"
+          @new-file="handleNewFile"
+        />
 
         <!-- Editor -->
         <div class="editor-container">
@@ -299,6 +414,7 @@ const closeCommandLine = () => {
             v-model="code"
             :language="fileLanguage"
             @cursor-change="handleCursorChange"
+            @update:modelValue="handleContentChange"
             class="flex-1"
           />
         </div>
@@ -330,8 +446,8 @@ const closeCommandLine = () => {
     <!-- Neovim Status Bar -->
     <NeovimStatusBar
       :current-mode="currentMode"
-      :file-name="activeFile"
-      :is-modified="true"
+      :file-name="activeFileName"
+      :is-modified="activeTab?.isModified || false"
       :git-branch="'main'"
       :git-changes="'+2 ~1'"
       :encoding="encoding"
@@ -445,38 +561,7 @@ const closeCommandLine = () => {
   color: var(--nvim-fg);
 }
 
-.tab-bar {
-  background: var(--nvim-bg-alt);
-  border-bottom: 1px solid var(--nvim-border);
-  display: flex;
-  height: 32px;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  background: var(--nvim-bg);
-  border-right: 1px solid var(--nvim-border);
-  font-size: 13px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.tab:hover {
-  background: var(--nvim-selection);
-}
-
-.tab.active {
-  background: var(--nvim-bg);
-}
-
-.tab-name {
-  color: var(--nvim-fg);
-}
-
-.tab-close {
+.editor-container {
   background: none;
   border: none;
   color: var(--nvim-fg-dim);

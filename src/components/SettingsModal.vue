@@ -127,7 +127,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useSettings } from '../composables/useSettings'
 
 interface Props {
