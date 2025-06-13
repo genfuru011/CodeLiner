@@ -1,19 +1,19 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-dark-surface border-2 border-accent rounded-lg w-full max-w-2xl mx-4 shadow-xl">
+  <div v-if="isOpen" class="modal-overlay">
+    <div class="settings-modal-bg border-2 border-accent rounded-lg w-full max-w-2xl mx-4 shadow-xl backdrop-blur-md">
       <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b border-dark-border">
+      <div class="flex items-center justify-between p-4 border-b border-dark-border settings-header">
         <h2 class="text-lg font-semibold text-accent">Settings</h2>
         <button 
           @click="$emit('close')"
           class="text-dark-text-muted hover:text-accent transition-colors"
         >
-          x
+          ×
         </button>
       </div>
 
       <!-- Settings Content -->
-      <div class="p-4 space-y-6 max-h-96 overflow-y-auto">
+      <div class="p-4 space-y-6 max-h-96 overflow-y-auto settings-content">
         <!-- Editor Settings -->
         <section>
           <h3 class="text-accent font-medium mb-3 border-b border-dark-border pb-1">Editor</h3>
@@ -103,37 +103,12 @@
                 <option value="18">18px</option>
               </select>
             </div>
-
-            <!-- Transparency Toggle -->
-            <div class="flex items-center justify-between">
-              <div class="flex-1">
-                <label class="text-dark-text text-sm font-medium">Background Transparency</label>
-                <p class="text-dark-text-muted text-xs">Toggle between 75% and 100% opacity ({{ Math.round(backgroundOpacity * 100) }}%)</p>
-              </div>
-              <button
-                @click="toggleTransparency"
-                aria-label="Toggle background transparency"
-                :class="[
-                  'relative inline-flex h-5 w-9 items-center rounded-full transition-colors border',
-                  isTransparent 
-                    ? 'bg-accent border-accent' 
-                    : 'bg-dark-bg border-dark-border'
-                ]"
-                <span
-                  :class="[
-                    'inline-block h-3 w-3 transform rounded-full transition-transform',
-                    isTransparent ? 'translate-x-5' : 'translate-x-1'
-                  ]"
-                  style="background: var(--nvim-fg);"
-                />
-              </button>
-            </div>
           </div>
         </section>
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-end gap-2 p-4 border-t border-dark-border">
+      <div class="flex justify-end gap-2 p-4 border-t border-dark-border settings-footer">
         <button
           @click="resetSettings"
           class="px-3 py-1 text-xs text-dark-text-muted hover:text-accent border border-dark-border rounded hover:border-accent transition-colors"
@@ -169,16 +144,8 @@ const {
   autoSave,
   theme,
   fontSize,
-  backgroundOpacity,
   resetSettings
 } = useSettings()
-
-// 透明度トグル用の定数
-const TRANSPARENT_OPACITY = 0.75
-const OPAQUE_OPACITY = 1.0
-
-// 透明度状態を計算
-const isTransparent = computed(() => backgroundOpacity.value === TRANSPARENT_OPACITY)
 
 // トグル関数を定義
 const toggleStatusBar = () => {
@@ -188,13 +155,76 @@ const toggleStatusBar = () => {
 const toggleAutoSave = () => {
   autoSave.value = !autoSave.value
 }
-
-const toggleTransparency = () => {
-  backgroundOpacity.value = isTransparent.value ? OPAQUE_OPACITY : TRANSPARENT_OPACITY
-}
 </script>
 
 <style scoped>
-/* Settings modal styles are handled by Tailwind classes */
+/* Modal overlay with dynamic transparency */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, calc(0.3 + (1 - var(--bg-opacity)) * 0.4));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Settings modal with transparency support */
+.settings-modal-bg {
+  background: var(--nvim-bg-alt);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(var(--nvim-blue), 0.3);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(var(--nvim-blue), 0.1);
+}
+
+.settings-header {
+  background: rgba(var(--nvim-bg-dark-rgb), calc(var(--bg-opacity) + 0.1));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.settings-content {
+  background: rgba(var(--nvim-bg-rgb), calc(var(--bg-opacity) - 0.05));
+}
+
+.settings-footer {
+  background: rgba(var(--nvim-bg-dark-rgb), calc(var(--bg-opacity) + 0.05));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Enhanced glass effect for better visibility */
+.settings-modal-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--nvim-blue), 0.03) 0%,
+    transparent 50%,
+    rgba(var(--nvim-purple), 0.03) 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Smooth transitions for transparency changes */
+.settings-modal-bg,
+.settings-header,
+.settings-content,
+.settings-footer {
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
 </style>
 
