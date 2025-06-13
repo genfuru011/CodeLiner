@@ -167,8 +167,10 @@ const handleKeyDown = (event: KeyboardEvent) => {
 // Mount keyboard event listeners
 onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
-  // Initialize background opacity
+  // Initialize background opacity immediately for default transparency
   updateBackgroundOpacity()
+  // Ensure CSS variables are set for initial transparency
+  document.documentElement.style.setProperty('--bg-opacity', '0.75')
 })
 
 onUnmounted(() => {
