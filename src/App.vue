@@ -11,6 +11,7 @@ import { useStatusBar } from './composables/useStatusBar'
 import { useSettings } from './composables/useSettings'
 import { useFileSystem } from './composables/useFileSystem'
 import { useTabManager } from './composables/useTabManager'
+import { useFileTree } from './composables/useFileTree'
 
 // Responsive design
 const { isMobile } = useResponsive()
@@ -35,6 +36,8 @@ const {
   loadFile,
   createNewFile,
   createFolder,
+  fileList,
+  folderList,
   init: initFileSystem
 } = useFileSystem()
 
@@ -51,6 +54,14 @@ const {
   updateCursorPosition: updateTabCursorPosition,
   handleKeyboardShortcuts
 } = useTabManager()
+
+// File tree
+const {
+  fileTree,
+  toggleFolder,
+  expandToPath,
+  initializeDefaultExpansion
+} = useFileTree()
 
 // Mobile/Tablet layout state
 const showSidebar = ref(true)
@@ -87,17 +98,27 @@ const switchPanel = (panel: 'editor' | 'console') => {
 
 // Folder toggle handler
 const handleFolderToggle = (path: string) => {
-  console.log('Toggle folder:', path)
-  // TODO: Implement folder expansion logic
+  toggleFolder(path)
 }
 
 // File operations
 const handleFileSelect = async (path: string) => {
   try {
+    // Check if tab already exists
+    const existingTab = activeTabs.value.find(tab => tab.filePath === path)
+    if (existingTab) {
+      setActiveTab(existingTab.id)
+      return
+    }
+    
+    // Load file from file system
     const file = await loadFile(path)
     if (file) {
       const tabId = createTab(file)
       setActiveTab(tabId)
+      
+      // Expand folders to show the selected file
+      expandToPath(path)
     }
   } catch (error) {
     console.error('Failed to open file:', error)
@@ -110,13 +131,41 @@ const handleNewFile = async () => {
     const fileName = prompt('Enter file name:', 'untitled.js')
     if (!fileName) return
     
-    const path = `/${fileName}`
-    const fileId = await createNewFile(fileName, path, '// New file\n')
+    // Default to root path, but allow user to specify folder
+    let filePath = `/${fileName}`
+    
+    // If user provides a path with folder, create folder structure
+    if (fileName.includes('/')) {
+      filePath = fileName.startsWith('/') ? fileName : `/${fileName}`
+      
+      // Create parent folders if they don't exist
+      const pathParts = filePath.split('/').slice(1, -1) // Remove empty first element and filename
+      let currentPath = ''
+      
+      for (const part of pathParts) {
+        currentPath += `/${part}`
+        const exists = folderList.value.some(folder => folder.path === currentPath)
+        
+        if (!exists) {
+          await createFolder({
+            name: part,
+            path: currentPath,
+            children: [],
+            expanded: false
+          })
+        }
+      }
+    }
+    
+    const fileId = await createNewFile(fileName.split('/').pop() || fileName, filePath, '// New file\n')
     const file = await loadFile(fileId)
     
     if (file) {
       const tabId = createTab(file)
       setActiveTab(tabId)
+      
+      // Expand folders to show the new file
+      expandToPath(filePath)
     }
   } catch (error) {
     console.error('Failed to create file:', error)
@@ -129,16 +178,40 @@ const handleNewFolder = async () => {
     const folderName = prompt('Enter folder name:', 'new-folder')
     if (!folderName) return
     
-    const path = `/${folderName}`
+    // Allow creating nested folders
+    let folderPath = folderName.startsWith('/') ? folderName : `/${folderName}`
+    
+    // Create parent folders if they don't exist
+    if (folderName.includes('/')) {
+      const pathParts = folderPath.split('/').slice(1, -1) // Remove empty first element and folder name
+      let currentPath = ''
+      
+      for (const part of pathParts) {
+        currentPath += `/${part}`
+        const exists = folderList.value.some(folder => folder.path === currentPath)
+        
+        if (!exists) {
+          await createFolder({
+            name: part,
+            path: currentPath,
+            children: [],
+            expanded: false
+          })
+        }
+      }
+    }
+    
     await createFolder({
-      name: folderName,
-      path,
+      name: folderName.split('/').pop() || folderName,
+      path: folderPath,
       children: [],
-      expanded: false
+      expanded: true // Auto-expand new folders
     })
     
-    // Refresh file tree
-    await refreshFileTree()
+    // Expand parent folders to show the new folder
+    expandToPath(folderPath)
+    
+    output.value = `Created folder: ${folderPath}`
   } catch (error) {
     console.error('Failed to create folder:', error)
     output.value = `Error: Failed to create folder`
@@ -167,6 +240,123 @@ const handleSaveFile = async () => {
 const refreshFileTree = async () => {
   console.log('Refreshing file tree...')
   // TODO: Implement file tree refresh from file system
+}
+
+// Create sample files for demonstration
+const createSampleFiles = async () => {
+  const files = fileList.value
+  const folders = folderList.value
+  
+  // Only create samples if no files exist
+  if (files.length === 0 && folders.length === 0) {
+    try {
+      // Create sample folders
+      await createFolder({
+        name: 'src',
+        path: '/src',
+        children: [],
+        expanded: false
+      })
+      
+      await createFolder({
+        name: 'docs',
+        path: '/docs',
+        children: [],
+        expanded: false
+      })
+      
+      await createFolder({
+        name: 'components',
+        path: '/src/components',
+        children: [],
+        expanded: false
+      })
+      
+      // Create welcome file
+      await createNewFile(
+        'Welcome.md',
+        '/Welcome.md',
+        `# Welcome to CodeLiner! 🚀
+
+CodeLiner is a modern web-based code editor inspired by Neovim and VS Code.
+
+## Features
+- 📝 Monaco Editor with syntax highlighting
+- 🎨 Beautiful Neovim-inspired dark theme
+- 📁 File system with IndexedDB persistence
+- 🏷️ Multi-tab editing support
+- ⌨️ Keyboard shortcuts (Ctrl+S, Ctrl+N, Ctrl+W)
+- 🎯 File icons for different file types
+
+## Getting Started
+1. Create new files using Ctrl+N or the + button
+2. Switch between tabs using Ctrl+Tab
+3. Save files using Ctrl+S
+4. Use the sidebar to navigate your files
+
+Happy coding! ✨`
+      )
+      
+      // Create sample JavaScript file
+      await createNewFile(
+        'example.js',
+        '/src/example.js',
+        `// Welcome to CodeLiner!
+// Try editing this JavaScript code
+
+console.log('Hello, CodeLiner! 🚀');
+
+function greet(name) {
+  return \`Hello, \${name}! Welcome to the future of web-based coding.\`;
+}
+
+// Try running this code with Ctrl+Enter
+const message = greet('Developer');
+console.log(message);
+
+// Create more files and explore the features!`
+      )
+      
+      // Create sample TypeScript file
+      await createNewFile(
+        'utils.ts',
+        '/src/utils.ts',
+        `// TypeScript utilities
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export function formatUserName(user: User): string {
+  return \`\${user.name} <\${user.email}>\`;
+}
+
+export const createUser = (name: string, email: string): User => ({
+  id: Math.random(),
+  name,
+  email
+});`
+      )
+      
+      // Create README in docs
+      await createNewFile(
+        'README.md',
+        '/docs/README.md',
+        `# Documentation
+
+This folder contains project documentation.
+
+## Files
+- \`README.md\` - This file
+- \`development-progress.md\` - Development progress tracking`
+      )
+      
+      console.log('Sample files created successfully')
+    } catch (error) {
+      console.error('Failed to create sample files:', error)
+    }
+  }
 }
 
 // Code execution function
@@ -308,6 +498,12 @@ onMounted(async () => {
   try {
     await initFileSystem()
     console.log('File system initialized')
+    
+    // Initialize file tree with default expansion
+    initializeDefaultExpansion()
+    
+    // Create sample files if none exist
+    await createSampleFiles()
   } catch (error) {
     console.error('Failed to initialize file system:', error)
   }
@@ -363,7 +559,7 @@ const closeCommandLine = () => {
       <NeovimSidebar
         v-if="!isMobile || showSidebar"
         :is-collapsed="sidebarCollapsed"
-        :file-tree="[]"
+        :file-tree="fileTree"
         :selected-file="activeTab?.filePath || ''"
         current-directory="/Users/hiroto/Documents/CodeLiner"
         @toggle="toggleSidebarCollapse"

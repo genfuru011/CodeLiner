@@ -83,7 +83,6 @@ export function useFileSystem() {
     })
   }
 
-  // Generate unique ID
   // File operations
   const saveFile = async (fileData: Omit<FileData, 'id' | 'lastModified' | 'size'>): Promise<string> => {
     if (!db) await initDB()
