@@ -50,3 +50,21 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Tauri specific
+src-tauri/target/
+src-tauri/Cargo.lock
+src-tauri/gen/
+
+# Rust specific
+Cargo.lock
+target/
+**/*.rs.bk
+
+# Tauri build artifacts
+*.app
+*.deb
+*.rpm
+*.dmg
+*.msi
+*.exe
